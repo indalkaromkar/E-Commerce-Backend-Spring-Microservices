@@ -28,7 +28,7 @@ Our eCommerce platform consists of the following microservices:
 4. `Payment Service`: Handles payment processing and integration with payment gateways.
 
 ## Entity-Relationship Diagram (ERD)
-![ERD](https://github.com/iammahesh123/E-Commerce-Backend-Spring-Microservices/blob/master/EntityFinal.jpg)
+![ERD](https://github.com/indalkaromkar/E-Commerce-Backend-Spring-Microservices/blob/master/EntityFinal.jpg)
 
 ### Features
 

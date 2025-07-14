@@ -2,7 +2,7 @@ services:
   # Eureka Server
   - type: web
     name: eureka-server
-    env: java
+    runtime: java
     buildCommand: cd EurekaServerService && ./mvnw clean package -DskipTests
     startCommand: cd EurekaServerService && java -jar target/EurekaServerService.jar
     plan: starter
@@ -15,7 +15,7 @@ services:
   # Config Server
   - type: web
     name: config-server
-    env: java
+    runtime: java
     buildCommand: cd CloudConfig && ./mvnw clean package -DskipTests
     startCommand: cd CloudConfig && java -jar target/CloudConfig.jar
     plan: starter
@@ -30,7 +30,7 @@ services:
   # User Service
   - type: web
     name: user-service
-    env: java
+    runtime: java
     buildCommand: cd UserService && ./mvnw clean package -DskipTests
     startCommand: cd UserService && java -jar target/UserService.jar
     plan: starter
@@ -47,7 +47,7 @@ services:
   # Product Service
   - type: web
     name: product-service
-    env: java
+    runtime: java
     buildCommand: cd ProductService && ./mvnw clean package -DskipTests
     startCommand: cd ProductService && java -jar target/ProductService.jar
     plan: starter
@@ -64,7 +64,7 @@ services:
   # Order Service
   - type: web
     name: order-service
-    env: java
+    runtime: java
     buildCommand: cd OrderService && ./mvnw clean package -DskipTests
     startCommand: cd OrderService && java -jar target/OrderService.jar
     plan: starter
@@ -81,7 +81,7 @@ services:
   # Payment Service
   - type: web
     name: payment-service
-    env: java
+    runtime: java
     buildCommand: cd PaymentService && ./mvnw clean package -DskipTests
     startCommand: cd PaymentService && java -jar target/PaymentService.jar
     plan: starter
@@ -98,7 +98,7 @@ services:
   # API Gateway
   - type: web
     name: api-gateway
-    env: java
+    runtime: java
     buildCommand: cd ApiGateway && ./mvnw clean package -DskipTests
     startCommand: cd ApiGateway && java -jar target/ApiGateway.jar
     plan: starter

@@ -4,7 +4,6 @@ services:
     name: eureka-server
     env: docker
     buildCommand: cd EurekaServerService && ./mvnw clean package -DskipTests
-    startCommand: cd EurekaServerService && java -jar target/EurekaServerService.jar
     plan: starter
     envVars:
       - key: SERVER_PORT
@@ -17,7 +16,6 @@ services:
     name: config-server
     env: docker
     buildCommand: cd CloudConfig && ./mvnw clean package -DskipTests
-    startCommand: cd CloudConfig && java -jar target/CloudConfig.jar
     plan: starter
     envVars:
       - key: SERVER_PORT
@@ -32,7 +30,6 @@ services:
     name: user-service
     env: docker
     buildCommand: cd UserService && ./mvnw clean package -DskipTests
-    startCommand: cd UserService && java -jar target/UserService.jar
     plan: starter
     envVars:
       - key: SERVER_PORT
@@ -49,7 +46,6 @@ services:
     name: product-service
     env: docker
     buildCommand: cd ProductService && ./mvnw clean package -DskipTests
-    startCommand: cd ProductService && java -jar target/ProductService.jar
     plan: starter
     envVars:
       - key: SERVER_PORT
@@ -66,7 +62,6 @@ services:
     name: order-service
     env: docker
     buildCommand: cd OrderService && ./mvnw clean package -DskipTests
-    startCommand: cd OrderService && java -jar target/OrderService.jar
     plan: starter
     envVars:
       - key: SERVER_PORT
@@ -83,7 +78,6 @@ services:
     name: payment-service
     env: docker
     buildCommand: cd PaymentService && ./mvnw clean package -DskipTests
-    startCommand: cd PaymentService && java -jar target/PaymentService.jar
     plan: starter
     envVars:
       - key: SERVER_PORT
@@ -100,7 +94,6 @@ services:
     name: api-gateway
     env: docker
     buildCommand: cd ApiGateway && ./mvnw clean package -DskipTests
-    startCommand: cd ApiGateway && java -jar target/ApiGateway.jar
     plan: starter
     envVars:
       - key: SERVER_PORT

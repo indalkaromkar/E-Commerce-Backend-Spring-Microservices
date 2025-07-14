@@ -36,12 +36,10 @@ class ProductServiceTest {
         Category category = Category.builder().categoryId(1).categoryName("Electronics").build();
         List<Product> products = Arrays.asList(
                 Product.builder().productId(1).productName("Laptop").category(category).build(),
-                Product.builder().productId(2).productName("Phone").category(category).build()
-        );
+                Product.builder().productId(2).productName("Phone").category(category).build());
         List<ProductDTO> productDTOs = Arrays.asList(
                 ProductDTO.builder().productId(1).productTitle("Laptop").build(),
-                ProductDTO.builder().productId(2).productTitle("Phone").build()
-        );
+                ProductDTO.builder().productId(2).productTitle("Phone").build());
 
         when(productRepository.findAll()).thenReturn(products);
         // Mock static method calls are not needed for static methods

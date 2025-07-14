@@ -2,7 +2,7 @@ package org.example.productservice.service;
 
 import org.example.productservice.domain.dto.ProductDTO;
 import org.example.productservice.domain.entity.Product;
-import org.example.productservice.mapper.ProductMapping;
+
 import org.example.productservice.repository.ProductRepository;
 import org.example.productservice.service.impl.ProductServiceImplementation;
 import org.junit.jupiter.api.Test;
@@ -24,8 +24,6 @@ class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
-
-
 
     @InjectMocks
     private ProductServiceImplementation productService;

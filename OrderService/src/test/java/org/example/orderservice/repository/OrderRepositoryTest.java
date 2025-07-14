@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,9 +23,8 @@ class OrderRepositoryTest {
     void shouldSaveAndFindOrder() {
         // Given
         Order order = Order.builder()
-                .userId(1)
-                .totalAmount(BigDecimal.valueOf(99.99))
-                .status("PENDING")
+                .orderDesc("Test Order")
+                .orderFee(99.99)
                 .build();
 
         // When
@@ -35,27 +33,23 @@ class OrderRepositoryTest {
 
         // Then
         assertThat(found).isPresent();
-        assertThat(found.get().getUserId()).isEqualTo(1);
-        assertThat(found.get().getTotalAmount()).isEqualTo(BigDecimal.valueOf(99.99));
-        assertThat(found.get().getStatus()).isEqualTo("PENDING");
+        assertThat(found.get().getOrderDesc()).isEqualTo("Test Order");
+        assertThat(found.get().getOrderFee()).isEqualTo(99.99);
     }
 
     @Test
-    void shouldFindOrdersByUserId() {
+    void shouldFindAllOrders() {
         // Given
-        Order order1 = Order.builder().userId(1).totalAmount(BigDecimal.valueOf(99.99)).build();
-        Order order2 = Order.builder().userId(1).totalAmount(BigDecimal.valueOf(149.99)).build();
-        Order order3 = Order.builder().userId(2).totalAmount(BigDecimal.valueOf(199.99)).build();
+        Order order1 = Order.builder().orderDesc("Order 1").orderFee(99.99).build();
+        Order order2 = Order.builder().orderDesc("Order 2").orderFee(149.99).build();
         
         entityManager.persistAndFlush(order1);
         entityManager.persistAndFlush(order2);
-        entityManager.persistAndFlush(order3);
 
         // When
-        var userOrders = orderRepository.findByUserId(1);
+        var allOrders = orderRepository.findAll();
 
         // Then
-        assertThat(userOrders).hasSize(2);
-        assertThat(userOrders).allMatch(order -> order.getUserId().equals(1));
+        assertThat(allOrders).hasSize(2);
     }
 }

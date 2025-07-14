@@ -1,11 +1,16 @@
 package com.gfg.userservice.service;
 
+import com.gfg.userservice.domain.dto.CredentialDTO;
 import com.gfg.userservice.domain.dto.UserDTO;
+import com.gfg.userservice.domain.entity.Credential;
 import com.gfg.userservice.domain.entity.User;
+import com.gfg.userservice.domain.enums.RoleBasedAuthority;
 import com.gfg.userservice.exceptions.UserObjectNotFoundException;
-import com.gfg.userservice.helperClass.UserMapping;
+import com.gfg.userservice.repository.CredentialRepository;
 import com.gfg.userservice.repository.UserRepository;
+import com.gfg.userservice.security.JwtUtil;
 import com.gfg.userservice.service.serviceImpl.UserServiceImpl;
+import com.gfg.userservice.service.EmailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,7 +23,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,7 +32,13 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private UserMapping userMapping;
+    private CredentialRepository credentialRepository;
+
+    @Mock
+    private EmailService emailService;
+
+    @Mock
+    private JwtUtil jwtUtil;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -36,18 +46,33 @@ class UserServiceTest {
     @Test
     void shouldFindAllUsers() {
         // Given
+        Credential credential1 = Credential.builder()
+                .credentialId(1)
+                .username("john")
+                .password("password")
+                .roleBasedAuthority(RoleBasedAuthority.ROLE_USER)
+                .isEnabled(true)
+                .isAccountNonExpired(true)
+                .isAccountNonLocked(true)
+                .isCredentialsNonExpired(true)
+                .build();
+
+        Credential credential2 = Credential.builder()
+                .credentialId(2)
+                .username("jane")
+                .password("password")
+                .roleBasedAuthority(RoleBasedAuthority.ROLE_USER)
+                .isEnabled(true)
+                .isAccountNonExpired(true)
+                .isAccountNonLocked(true)
+                .isCredentialsNonExpired(true)
+                .build();
+
         List<User> users = Arrays.asList(
-                User.builder().userId(1).firstName("John").build(),
-                User.builder().userId(2).firstName("Jane").build()
-        );
-        List<UserDTO> userDTOs = Arrays.asList(
-                UserDTO.builder().userId(1).firstName("John").build(),
-                UserDTO.builder().userId(2).firstName("Jane").build()
-        );
+                User.builder().userId(1).firstName("John").credential(credential1).build(),
+                User.builder().userId(2).firstName("Jane").credential(credential2).build());
 
         when(userRepository.findAll()).thenReturn(users);
-        when(userMapping.mapToDto(users.get(0))).thenReturn(userDTOs.get(0));
-        when(userMapping.mapToDto(users.get(1))).thenReturn(userDTOs.get(1));
 
         // When
         List<UserDTO> result = userService.findAll();
@@ -61,11 +86,20 @@ class UserServiceTest {
     @Test
     void shouldFindUserById() {
         // Given
-        User user = User.builder().userId(1).firstName("John").build();
-        UserDTO userDTO = UserDTO.builder().userId(1).firstName("John").build();
+        Credential credential = Credential.builder()
+                .credentialId(1)
+                .username("john")
+                .password("password")
+                .roleBasedAuthority(RoleBasedAuthority.ROLE_USER)
+                .isEnabled(true)
+                .isAccountNonExpired(true)
+                .isAccountNonLocked(true)
+                .isCredentialsNonExpired(true)
+                .build();
+
+        User user = User.builder().userId(1).firstName("John").credential(credential).build();
 
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
-        when(userMapping.mapToDto(user)).thenReturn(userDTO);
 
         // When
         UserDTO result = userService.findById(1);
@@ -88,28 +122,43 @@ class UserServiceTest {
     @Test
     void shouldSaveUser() {
         // Given
-        UserDTO userDTO = UserDTO.builder().firstName("John").build();
-        User user = User.builder().firstName("John").build();
-        User savedUser = User.builder().userId(1).firstName("John").build();
-        UserDTO savedUserDTO = UserDTO.builder().userId(1).firstName("John").build();
+        CredentialDTO credentialDTO = CredentialDTO.builder()
+                .username("john")
+                .password("password")
+                .roleBasedAuthority(RoleBasedAuthority.ROLE_USER)
+                .isEnabled(true)
+                .isAccountNonExpired(true)
+                .isAccountNonLocked(true)
+                .isCredentialNonExpired(true)
+                .build();
 
-        when(userMapping.mapToEntity(userDTO)).thenReturn(user);
-        when(userRepository.save(user)).thenReturn(savedUser);
-        when(userMapping.mapToDto(savedUser)).thenReturn(savedUserDTO);
+        UserDTO userDTO = UserDTO.builder().firstName("John").credentialDTO(credentialDTO).build();
+
+        Credential savedCredential = Credential.builder()
+                .credentialId(1)
+                .username("john")
+                .password("password")
+                .roleBasedAuthority(RoleBasedAuthority.ROLE_USER)
+                .isEnabled(true)
+                .isAccountNonExpired(true)
+                .isAccountNonLocked(true)
+                .isCredentialsNonExpired(true)
+                .build();
+
+        User savedUser = User.builder().userId(1).firstName("John").credential(savedCredential).build();
+
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
         // When
         UserDTO result = userService.save(userDTO);
 
         // Then
         assertThat(result.getUserId()).isEqualTo(1);
-        verify(userRepository).save(user);
+        verify(userRepository).save(any(User.class));
     }
 
     @Test
     void shouldDeleteUser() {
-        // Given
-        when(userRepository.existsById(1)).thenReturn(true);
-
         // When
         userService.deleteById(1);
 

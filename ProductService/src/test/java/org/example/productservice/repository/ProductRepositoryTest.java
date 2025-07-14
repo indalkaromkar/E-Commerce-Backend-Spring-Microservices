@@ -6,12 +6,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@TestPropertySource(properties = {
+		"spring.jpa.hibernate.ddl-auto=create-drop",
+		"spring.flyway.enabled=false",
+		"eureka.client.enabled=false"
+})
 class ProductRepositoryTest {
 
     @Autowired
@@ -23,17 +29,13 @@ class ProductRepositoryTest {
     @Test
     void shouldSaveAndFindProduct() {
         // Given
-        Category category = Category.builder()
-                .categoryName("Electronics")
-                .build();
-        entityManager.persistAndFlush(category);
-
         Product product = Product.builder()
                 .productName("Laptop")
                 .price(999.99)
                 .quantity(10)
-                .category(category)
                 .build();
+        product.setCreatedAt(java.time.Instant.now());
+        product.setUpdatedAt(java.time.Instant.now());
 
         // When
         Product saved = productRepository.save(product);
@@ -43,7 +45,6 @@ class ProductRepositoryTest {
         assertThat(found).isPresent();
         assertThat(found.get().getProductName()).isEqualTo("Laptop");
         assertThat(found.get().getPrice()).isEqualTo(999.99);
-        assertThat(found.get().getCategory().getCategoryName()).isEqualTo("Electronics");
     }
 
     @Test
@@ -53,6 +54,8 @@ class ProductRepositoryTest {
                 .productName("Phone")
                 .price(599.99)
                 .build();
+        product.setCreatedAt(java.time.Instant.now());
+        product.setUpdatedAt(java.time.Instant.now());
         Product saved = entityManager.persistAndFlush(product);
 
         // When

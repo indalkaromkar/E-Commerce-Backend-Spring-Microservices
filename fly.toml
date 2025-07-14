@@ -1,0 +1,20 @@
+app = "ecommerce-microservices"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile.fly"
+
+[[services]]
+  internal_port = 9191
+  protocol = "tcp"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+[env]
+  SPRING_PROFILES_ACTIVE = "docker"

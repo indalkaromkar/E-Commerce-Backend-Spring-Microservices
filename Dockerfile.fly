@@ -1,0 +1,9 @@
+FROM docker/compose:latest
+
+WORKDIR /app
+COPY docker-compose.yml .
+COPY . .
+
+EXPOSE 9191
+
+CMD ["docker-compose", "up"]

@@ -1,70 +1,84 @@
-# Render Docker Deployment Guide
+# Render Individual Service Deployment
 
-Deploy each microservice individually on Render using Docker.
+## Quick Setup Steps
 
-## Services to Deploy
+1. **Create New Web Service** on Render dashboard
+2. **Connect GitHub repo**
+3. **Configure each service** with settings below
+
+## Service Configurations
 
 ### 1. Eureka Server
-- **Repository**: Connect your GitHub repo
-- **Environment**: Docker
-- **Dockerfile Path**: `EurekaServerService/Dockerfile`
-- **Port**: 9099
+- **Root Directory**: `EurekaServerService`
+- **Environment Variables**:
+  ```
+  SPRING_PROFILES_ACTIVE=docker
+  PORT=9099
+  ```
 
 ### 2. Config Server
-- **Repository**: Connect your GitHub repo
-- **Environment**: Docker
-- **Dockerfile Path**: `CloudConfig/Dockerfile`
-- **Port**: 9296
+- **Root Directory**: `CloudConfig`
 - **Environment Variables**:
-  - `EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=https://eureka-server.onrender.com/eureka`
+  ```
+  SPRING_PROFILES_ACTIVE=docker
+  EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=https://[eureka-service-name].onrender.com/eureka
+  PORT=9296
+  ```
 
 ### 3. User Service
-- **Repository**: Connect your GitHub repo
-- **Environment**: Docker
-- **Dockerfile Path**: `UserService/Dockerfile`
-- **Port**: 9050
+- **Root Directory**: `UserService`
 - **Environment Variables**:
-  - `EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=https://eureka-server.onrender.com/eureka`
-  - `SPRING_CLOUD_CONFIG_URI=https://config-server.onrender.com`
+  ```
+  SPRING_PROFILES_ACTIVE=docker
+  EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=https://[eureka-service-name].onrender.com/eureka
+  SPRING_CLOUD_CONFIG_URI=https://[config-service-name].onrender.com
+  PORT=9050
+  ```
 
 ### 4. Product Service
-- **Repository**: Connect your GitHub repo
-- **Environment**: Docker
-- **Dockerfile Path**: `ProductService/Dockerfile`
-- **Port**: 9051
+- **Root Directory**: `ProductService`
 - **Environment Variables**:
-  - `EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=https://eureka-server.onrender.com/eureka`
-  - `SPRING_CLOUD_CONFIG_URI=https://config-server.onrender.com`
+  ```
+  SPRING_PROFILES_ACTIVE=docker
+  EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=https://[eureka-service-name].onrender.com/eureka
+  SPRING_CLOUD_CONFIG_URI=https://[config-service-name].onrender.com
+  PORT=9051
+  ```
 
 ### 5. Order Service
-- **Repository**: Connect your GitHub repo
-- **Environment**: Docker
-- **Dockerfile Path**: `OrderService/Dockerfile`
-- **Port**: 9052
+- **Root Directory**: `OrderService`
 - **Environment Variables**:
-  - `EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=https://eureka-server.onrender.com/eureka`
-  - `SPRING_CLOUD_CONFIG_URI=https://config-server.onrender.com`
+  ```
+  SPRING_PROFILES_ACTIVE=docker
+  EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=https://[eureka-service-name].onrender.com/eureka
+  SPRING_CLOUD_CONFIG_URI=https://[config-service-name].onrender.com
+  PORT=9052
+  ```
 
 ### 6. Payment Service
-- **Repository**: Connect your GitHub repo
-- **Environment**: Docker
-- **Dockerfile Path**: `PaymentService/Dockerfile`
-- **Port**: 9053
+- **Root Directory**: `PaymentService`
 - **Environment Variables**:
-  - `EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=https://eureka-server.onrender.com/eureka`
-  - `SPRING_CLOUD_CONFIG_URI=https://config-server.onrender.com`
+  ```
+  SPRING_PROFILES_ACTIVE=docker
+  EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=https://[eureka-service-name].onrender.com/eureka
+  SPRING_CLOUD_CONFIG_URI=https://[config-service-name].onrender.com
+  PORT=9053
+  ```
 
 ### 7. API Gateway
-- **Repository**: Connect your GitHub repo
-- **Environment**: Docker
-- **Dockerfile Path**: `ApiGateway/Dockerfile`
-- **Port**: 9191
+- **Root Directory**: `ApiGateway`
 - **Environment Variables**:
-  - `EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=https://eureka-server.onrender.com/eureka`
-  - `SPRING_CLOUD_CONFIG_URI=https://config-server.onrender.com`
+  ```
+  SPRING_PROFILES_ACTIVE=docker
+  EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=https://[eureka-service-name].onrender.com/eureka
+  SPRING_CLOUD_CONFIG_URI=https://[config-service-name].onrender.com
+  PORT=9191
+  ```
 
 ## Deployment Order
-1. Deploy Eureka Server first
-2. Deploy Config Server
-3. Deploy all other services (User, Product, Order, Payment)
-4. Deploy API Gateway last
+1. Eureka Server
+2. Config Server
+3. All other services
+4. API Gateway
+
+**Note**: Replace `[service-name]` with actual Render service URLs

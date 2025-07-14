@@ -1,8 +1,10 @@
 package org.example.productservice.service;
 
 import org.example.productservice.domain.dto.ProductDTO;
+import org.example.productservice.domain.dto.CategoryDTO;
 import org.example.productservice.domain.entity.Product;
-import org.example.productservice.mapper.ProductMapping;
+import org.example.productservice.domain.entity.Category;
+
 import org.example.productservice.repository.ProductRepository;
 import org.example.productservice.service.impl.ProductServiceImplementation;
 import org.junit.jupiter.api.Test;
@@ -25,17 +27,16 @@ class ProductServiceTest {
     @Mock
     private ProductRepository productRepository;
 
-
-
     @InjectMocks
     private ProductServiceImplementation productService;
 
     @Test
     void shouldFindAllProducts() {
         // Given
+        Category category = Category.builder().categoryId(1).categoryName("Electronics").build();
         List<Product> products = Arrays.asList(
-                Product.builder().productId(1).productName("Laptop").build(),
-                Product.builder().productId(2).productName("Phone").build()
+                Product.builder().productId(1).productName("Laptop").category(category).build(),
+                Product.builder().productId(2).productName("Phone").category(category).build()
         );
         List<ProductDTO> productDTOs = Arrays.asList(
                 ProductDTO.builder().productId(1).productTitle("Laptop").build(),
@@ -56,7 +57,8 @@ class ProductServiceTest {
     @Test
     void shouldFindProductById() {
         // Given
-        Product product = Product.builder().productId(1).productName("Laptop").build();
+        Category category = Category.builder().categoryId(1).categoryName("Electronics").build();
+        Product product = Product.builder().productId(1).productName("Laptop").category(category).build();
         ProductDTO productDTO = ProductDTO.builder().productId(1).productTitle("Laptop").build();
 
         when(productRepository.findById(1)).thenReturn(Optional.of(product));
@@ -73,9 +75,11 @@ class ProductServiceTest {
     @Test
     void shouldSaveProduct() {
         // Given
-        ProductDTO productDTO = ProductDTO.builder().productTitle("Laptop").build();
-        Product product = Product.builder().productName("Laptop").build();
-        Product savedProduct = Product.builder().productId(1).productName("Laptop").build();
+        CategoryDTO categoryDTO = CategoryDTO.builder().categoryId(1).categoryName("Electronics").build();
+        ProductDTO productDTO = ProductDTO.builder().productTitle("Laptop").categoryDto(categoryDTO).build();
+        Category category = Category.builder().categoryId(1).categoryName("Electronics").build();
+        Product product = Product.builder().productName("Laptop").category(category).build();
+        Product savedProduct = Product.builder().productId(1).productName("Laptop").category(category).build();
         ProductDTO savedProductDTO = ProductDTO.builder().productId(1).productTitle("Laptop").build();
 
         when(productRepository.save(any(Product.class))).thenReturn(savedProduct);
